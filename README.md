@@ -1,14 +1,36 @@
-# ComfyUI-Speaker-Isolation
+# ComfyUI-Speaker-Isolation-Community
 
 A custom node for ComfyUI that performs speaker diarization to isolate individual speaker audio tracks from a single audio source.
+Forked to give ability to iterate thru all the speakers in the audio.
+This can be used in for loop in comfy, to process each segment.
+
+The version uses the Community version of 
+https://huggingface.co/pyannote/speaker-diarization-community-1
+You must accept all terms, there are multiple terms you need accept not jsut one
+You will need a Hugging face token for this to work
+
 
 ## Features
 
--   Takes a single audio input.
+-   Takes a single audio input and finds all the speakers.
 -   Uses `pyannote.audio` for speaker diarization.
--   Outputs up to four separate audio tracks, one for each identified speaker.
--   Each output track maintains the original audio's full duration, with silence inserted where a specific speaker is not active.
--   Provides a summary of the diarization results (number of speakers, time per speaker).
+-   Iterate thru the speakers
+
+
+## Node: IterateThruSpeakers
+
+-   **Category:** `Audio`
+-   **Inputs:**
+    -   `audio` (AUDIO): The input audio file/data.
+    -   `hf_token` (STRING): Your Hugging Face access token. This is **required** to download and use `pyannote.audio` pretrained models. 
+    -   `index` (INT): index (1 based, select a speaker)
+    You can get a token from [hf.co/settings/tokens](https://hf.co/settings/tokens).
+    -   `device` (COMBO): The device to run the diarization model on (`auto`, `cuda`, `cpu`).
+-   **Outputs:**
+    -   `total_segments` (int): total number of speaker segments
+    -   `start_time` (float): start time of audio segment
+    -   `duration` (float): duration of audio segment
+
 
 ## Node: Speaker Diarizer (Isolation)
 
@@ -36,7 +58,7 @@ If fewer than four speakers are detected, the remaining speaker audio outputs wi
     (Replace `<repository_url_for_ComfyUI-Speaker-Isolation>` with the actual URL once it's hosted.)
 
 2.  **Install Dependencies:**
-    Navigate into the cloned directory `ComfyUI/custom_nodes/ComfyUI-Speaker-Isolation/` and install the required Python packages:
+    Navigate into the cloned directory `ComfyUI/custom_nodes/ComfyUI-Speaker-Isolation-Community/` and install the required Python packages:
     ```bash
     pip install -r requirements.txt
     ```
