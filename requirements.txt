@@ -1,7 +1,9 @@
---no-cache-dir --no-deps "pyannote.audio==3.1.1"
-# Or a more specific version if known to be stable/required
-# torch and torchaudio are usually core ComfyUI dependencies,
-# but listing them explicitly can be good practice if specific versions are needed.
-# For now, relying on ComfyUI's environment for these.
-# torch
-# torchaudio
+pyannote-audio>=4.0.4 --no-deps
+
+
+# Unfortunately this lib is very heavy with deps
+# and causing issues with the comfy envrionment
+# I add --no-deps, 
+# you can remove the --no-deps if you like
+# but just now many libs are pulled in
+

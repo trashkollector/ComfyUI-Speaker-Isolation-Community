@@ -4,6 +4,110 @@ import torchaudio
 import numpy as np
 from comfy import model_management as mm
 
+
+################################################################################################################
+########### THIS IS A FORK FROM               https://github.com/pmarmotte2/ComfyUI-Speaker-Isolation
+############ NEED TO ACCPEPT TERMS on website https://huggingface.co/pyannote/speaker-diarization-community-1
+############ NEED A TOKEN FROM HUGGING FACE
+##################################################################################################################
+class IterateThruSpeakers:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "audio": ("AUDIO",),
+                "hf_token": ("STRING", {"default": "", "multiline": False}),
+                "index": ("INT", {"default": 1, "min": 1, "max": 100, "step": 1}),
+            }
+        }
+
+    RETURN_TYPES = ("INT", "FLOAT", "FLOAT")
+    RETURN_NAMES = ("total_segments", "start_time", "duration")
+    FUNCTION = "iterateThruSpeakers"
+    CATEGORY = "audio"
+
+    def iterateThruSpeakers(self, audio, hf_token, index):
+        print(f"[IterateThruSpeakers] Starting… v1.0 | Requested index: {index}")
+
+        try:
+            import sys
+            import torch
+            import torchaudio
+
+            # Device
+            processing_device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+            # Prepare waveform
+            sr = audio["sample_rate"]
+            wf = audio["waveform"]
+
+            if wf.ndim == 3:
+                mono = wf[0].mean(dim=0)
+            elif wf.ndim == 2:
+                mono = wf[0]
+            else:
+                mono = wf
+            mono = mono.cpu()
+
+            target_sr = 16000
+            if sr != target_sr:
+                resampler = torchaudio.transforms.Resample(orig_freq=sr, new_freq=target_sr)
+                mono = resampler(mono)
+
+            audio_for_diar = {"waveform": mono.unsqueeze(0), "sample_rate": target_sr}
+
+            # Diarization
+            from pyannote.audio import Pipeline
+            ##################################################################
+            ############ NEED TO ACCPEPT TERMS on website https://huggingface.co/pyannote/speaker-diarization-community-1
+            ############ NEED A TOKEN FROM HUGGING FACE
+            ####################################################################
+            pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization-community-1", token=hf_token)
+            pipeline.to(processing_device)
+            diarization = pipeline(audio_for_diar)
+
+            # Collect all segments in chronological order
+            raw_segments = []
+            for turn, speaker in diarization.speaker_diarization:
+                raw_segments.append((float(turn.start), float(turn.end), speaker))
+
+            # Sort by start time
+            raw_segments.sort(key=lambda x: x[0])
+
+            # Merge contiguous blocks of the same speaker
+            merged = []
+            for start, end, speaker in raw_segments:
+                if merged and merged[-1][2] == speaker:
+                    # Same speaker as last block — extend it
+                    merged[-1] = (merged[-1][0], end, speaker)
+                else:
+                    # Different speaker — new block
+                    merged.append((start, end, speaker))
+
+            total_segments = len(merged)
+            print(f"[SpeakerSegmentInfoNode] Total merged segments: {total_segments}")
+            for i, (s, e, spk) in enumerate(merged, 1):
+                print(f"  Block {i}: {spk} | {s:.2f}s → {e:.2f}s | duration: {e-s:.2f}s")
+
+            # Validate index
+            if index < 1 or index > total_segments:
+                print(f"[SpeakerSegmentInfoNode] Index {index} out of range (1-{total_segments}), returning zeros")
+                return (total_segments, 0.0, 0.0)
+
+            # Get requested block
+            seg_start, seg_end, seg_speaker = merged[index - 1]
+            duration = seg_end - seg_start
+            print(f"[SpeakerSegmentInfoNode] Returning block {index}: {seg_speaker} | start={seg_start:.2f}s | duration={duration:.2f}s")
+
+            return (total_segments, float(seg_start), float(duration))
+
+        except Exception as e:
+            import traceback
+            print(f"[SpeakerSegmentInfoNode] Error: {str(e)}\n{traceback.format_exc()}")
+            return (0, 0.0, 0.0)
+        
+
+
 class SpeakerDiarizerChronoNode:
     """
     Speaker diarization for ComfyUI with guaranteed chronological ordering:
@@ -34,10 +138,10 @@ class SpeakerDiarizerChronoNode:
 
     def diarize_audio(self, audio, hf_token, device):
         # Make logs easy to identify this new node
-        print("[SpeakerDiarizerChronoNode] Starting…")
+        print("[SpeakerDiarizerChronoNode] Starting… v1.1")
         try:
             sys.setrecursionlimit(3000)
-            print("[SpeakerDiarizerChronoNode] Recursion limit set to", sys.getrecursionlimit())
+            #print("[SpeakerDiarizerChronoNode] Recursion limit set to", sys.getrecursionlimit())
             torch.set_num_threads(1)
             torch.set_num_interop_threads(1)
         except Exception as e:
@@ -77,7 +181,10 @@ class SpeakerDiarizerChronoNode:
         try:
             from pyannote.audio import Pipeline
             print(f"[SpeakerDiarizerChronoNode] Loading pyannote pipeline on {processing_device}")
-            pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization-3.1", use_auth_token=hf_token)
+            ##################################################################################
+            ############# MAKE SURE YOU HAVE A TOKEN + ACCEPT TERMS ON WEBSITE or this will not work
+            pipeline = Pipeline.from_pretrained('pyannote/speaker-diarization-community-1', token=hf_token)
+
             pipeline.to(processing_device)
 
             diarization = pipeline(audio_for_diar)
@@ -88,12 +195,19 @@ class SpeakerDiarizerChronoNode:
             print("[SpeakerDiarizerChronoNode]", err)
             return self._silent_outputs(audio, err)
 
+
         # Post-processing with strict chronological order
         try:
             # Collect segments per label (DO NOT use alphabetical label order anywhere)
             speaker_segments = {}
-            for turn, _, label in diarization.itertracks(yield_label=True):
-                speaker_segments.setdefault(label, []).append((float(turn.start), float(turn.end)))
+
+            for turn, speaker in diarization.speaker_diarization:
+                speaker_segments.setdefault(speaker, []).append((float(turn.start), float(turn.end)))
+
+            # Add this to see ALL segments per speaker
+            for lab, segs in speaker_segments.items():
+                print(f"[SpeakerDiarizerChronoNode] {lab} segments: {segs}")
+
 
             # Compute first start per speaker and sort
             speaker_first_start = {lab: min(s[0] for s in segs) for lab, segs in speaker_segments.items()}
@@ -102,6 +216,7 @@ class SpeakerDiarizerChronoNode:
             print("[SpeakerDiarizerChronoNode] Chronological mapping (this defines output order):")
             for i, lab in enumerate(speakers_ordered, 1):
                 print(f"  Output {i} -> {lab} @ {speaker_first_start[lab]:.2f}s")
+
 
             # Prepare original sample rate waveform for output building
             wf = audio["waveform"]
@@ -132,8 +247,12 @@ class SpeakerDiarizerChronoNode:
             while len(outputs) < 4:
                 outputs.append({"waveform": torch.zeros_like(src).unsqueeze(0).unsqueeze(0), "sample_rate": sr})
 
-            summary_lines = [f"Output {i+1} -> {lab} @ {speaker_first_start[lab]:.2f}s"
-                             for i, lab in enumerate(speakers_ordered)]
+            summary_lines = []
+            for i, lab in enumerate(speakers_ordered):
+                segs_str = ", ".join([f"{s:.2f}s-{e:.2f}s" for s, e in speaker_segments[lab]])
+                summary_lines.append(f"Output {i+1} -> {lab}: {segs_str}")
+            
+
             summary = "Speakers ordered by first appearance:\n" + "\n".join(summary_lines)
 
             return tuple(outputs) + (summary,)
@@ -144,11 +263,3 @@ class SpeakerDiarizerChronoNode:
             print("[SpeakerDiarizerChronoNode]", err)
             return self._silent_outputs(audio, err)
 
-# Register as a NEW node (new class key + new display name to avoid cache/old class issues)
-NODE_CLASS_MAPPINGS = {
-    "SpeakerDiarizerChronoNode": SpeakerDiarizerChronoNode
-}
-
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "SpeakerDiarizerChronoNode": "Speaker Diarizer (First Speaker = Output 1)"
-}

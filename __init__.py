@@ -1,15 +1,21 @@
-from .speaker_isolation_nodes import SpeakerDiarizerNode
+from .speaker_isolation_nodes import SpeakerDiarizerChronoNode, IterateThruSpeakers
 
 NODE_CLASS_MAPPINGS = {
-    "SpeakerDiarizer": SpeakerDiarizerNode,
+    "SpeakerDiarizerChronoNode": SpeakerDiarizerChronoNode,
+    "IterateThruSpeakers": IterateThruSpeakers,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "SpeakerDiarizer": "Speaker Diarizer (Isolation)",
+    "SpeakerDiarizerChronoNode": "Speaker Diarizer (Isolation)",
+    "IterateThruSpeakers": "IterateThruSpeakers",
 }
 
-WEB_DIRECTORY = "./js" # Optional: if you have custom JS for the UI
+WEB_DIRECTORY = "./js"  # Only if you actually have a /js folder with UI assets
 
-__all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS', 'WEB_DIRECTORY']
+__all__ = [
+    "NODE_CLASS_MAPPINGS",
+    "NODE_DISPLAY_NAME_MAPPINGS",
+    "WEB_DIRECTORY",
+]
 
-print("ComfyUI-Speaker-Isolation: Loaded SpeakerDiarizerNode")
+print("ComfyUI-Speaker-Isolation: Loaded SpeakerDiarizerChronoNode")
