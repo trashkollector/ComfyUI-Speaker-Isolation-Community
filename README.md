@@ -57,14 +57,17 @@ If fewer than four speakers are detected, the remaining speaker audio outputs wi
 1.  **Clone this repository:**
     Navigate to your `ComfyUI/custom_nodes/` directory and run:
     ```bash
-    git clone <repository_url_for_ComfyUI-Speaker-Isolation>
+    git clone https://github.com/trashkollector/ComfyUI-Speaker-Isolation-Community
     ```
-    (Replace `<repository_url_for_ComfyUI-Speaker-Isolation>` with the actual URL once it's hosted.)
+   
 
 2.  **Install Dependencies:**
     Navigate into the cloned directory `ComfyUI/custom_nodes/ComfyUI-Speaker-Isolation-Community/` and install the required Python packages:
     ```bash
     pip install -r requirements.txt
+
+    requirements file is using --no-deps to avoid issues because this lib has many dependencies.
+    
     ```
     This will install `pyannote.audio` and its dependencies.
     You also need `ffmpeg` installed on your system, as `pyannote.audio` (and `torchaudio`) may rely on it for loading various audio formats.
