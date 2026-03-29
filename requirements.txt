@@ -1,9 +1,17 @@
-pyannote-audio>=4.0.4 --no-deps
+# Because pyannote has so many dependencies... i did not put the lib in this requirements file.
+
+# you will need to run this
+# pip install "pyannote-audio>=4.0.4" --no-deps
+
+# Then you can install the dependencies - as needed.
+# Giving you the safe approach to avoid messing up your environment
+# if you feel bold, then remove the --no-deps and run that way
 
 
-# Unfortunately this lib is very heavy with deps
-# and causing issues with the comfy envrionment
-# I add --no-deps, 
-# you can remove the --no-deps if you like
-# but just now many libs are pulled in
+
+#pyannote-audio==4.0.4  requires: asteroid-filterbanks, einops, huggingface-hub, lightning, matplotlib, opentelemetry-api, 
+#opentelemetry-exporter-otlp, opentelemetry-sdk, pyannote-core, pyannote-database, pyannote-metrics, 
+#pyannote-pipeline, pyannoteai-sdk,  pytorch-metric-learning, rich, safetensors, torch, torch-audiomentations,
+# torchaudio, torchcodec, torchmetrics
+
 
