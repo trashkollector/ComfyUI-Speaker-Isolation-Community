@@ -21,8 +21,8 @@ class IterateThruSpeakers:
             }
         }
 
-    RETURN_TYPES = ("INT", "FLOAT", "FLOAT")
-    RETURN_NAMES = ("total_segments", "start_time", "duration")
+    RETURN_TYPES = ("INT", "FLOAT", "FLOAT", "STRING")
+    RETURN_NAMES = ("total_segments", "start_time", "duration", "speaker")
     FUNCTION = "iterateThruSpeakers"
     CATEGORY = "audio"
 
@@ -74,6 +74,10 @@ class IterateThruSpeakers:
             # Sort by start time
             raw_segments.sort(key=lambda x: x[0])
 
+            # Filter micro segments FIRST
+            MIN_DURATION = 1.0
+            raw_segments = [(s, e, sp) for s, e, sp in raw_segments if (e - s) >= MIN_DURATION]
+
             # Merge contiguous blocks of the same speaker
             merged = []
             for start, end, speaker in raw_segments:
@@ -84,13 +88,6 @@ class IterateThruSpeakers:
                     # Different speaker — new block
                     merged.append((start, end, speaker))
 
-
-            # Drop any merged block shorter than 1 second
-            MIN_DURATION = 1.0
-            filtered = [(s, e, sp) for (s, e, sp) in merged if (e - s) >= MIN_DURATION]
-
-            # IMPORTANT: replace merged with filtered
-            merged = filtered
             
             total_segments = len(merged)
             print(f"[SpeakerSegmentInfoNode] Total merged segments: {total_segments}")
@@ -119,12 +116,12 @@ class IterateThruSpeakers:
 
             print(f"[SpeakerSegmentInfoNode] Returning block {index}: {seg_speaker} | start={seg_start:.2f}s | duration={duration:.2f}s")
 
-            return (total_segments, float(seg_start), float(duration))
+            return (total_segments, float(seg_start), float(duration), seg_speaker)
 
         except Exception as e:
             import traceback
             print(f"[SpeakerSegmentInfoNode] Error: {str(e)}\n{traceback.format_exc()}")
-            return (0, 0.0, 0.0)
+            return (0, 0.0, 0.0, "")
         
 
 
