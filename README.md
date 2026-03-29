@@ -67,7 +67,13 @@ If fewer than four speakers are detected, the remaining speaker audio outputs wi
     ```bash
     git clone https://github.com/trashkollector/ComfyUI-Speaker-Isolation-Community
     ```
-   
+    
+    Why installing from Comfy Manager may fail.  I have disabled the libs in requirements file.
+    You will need to do this part yourself. Yes this was intentional becauase heavy dependencies could 
+    your mess up your environment with new versions, etc.  This is possibility with any custom  node
+    but this lib has many dependencies so chose to not incude 
+    
+    
 
 2.  **Install Dependencies:**
     Navigate into the cloned directory `ComfyUI/custom_nodes/ComfyUI-Speaker-Isolation-Community/` and install the required Python packages:
