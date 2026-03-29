@@ -36,6 +36,10 @@ You will need a Hugging face token for this to work
 
 
 
+https://github.com/user-attachments/assets/35589326-6212-42da-8e9f-84da18b90024
+
+
+
 ## Node: Speaker Diarizer (Isolation)
 
 -   **Category:** `Audio/Isolation`
