@@ -1,0 +1,14 @@
+[project]
+name = "ComfyUI-Speaker-Isolation-Community"
+description = "Isolate speakers in audio using Pyannote mode."
+version = "1.0.0"
+license = { file = "LICENSE" }
+
+[project.urls]
+Repository = "https://github.com/trashkollector/ComfyUI-Speaker-Isolation-Community"
+
+[tool.comfy]
+PublisherId = "trashkollector"
+DisplayName = "Speaker-Isolation-Community"
+Icon = ""
+
