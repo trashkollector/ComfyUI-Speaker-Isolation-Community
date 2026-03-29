@@ -84,6 +84,14 @@ class IterateThruSpeakers:
                     # Different speaker — new block
                     merged.append((start, end, speaker))
 
+
+            # Drop any merged block shorter than 1 second
+            MIN_DURATION = 1.0
+            filtered = [(s, e, sp) for (s, e, sp) in merged if (e - s) >= MIN_DURATION]
+
+            # IMPORTANT: replace merged with filtered
+            merged = filtered
+            
             total_segments = len(merged)
             print(f"[SpeakerSegmentInfoNode] Total merged segments: {total_segments}")
             for i, (s, e, spk) in enumerate(merged, 1):
