@@ -40,7 +40,9 @@ What did we do?
 We took audio from an old sitcom, used this node to chop up the audio into segments.
 then we added video to all the audio segments.
 
-https://github.com/user-attachments/assets/35589326-6212-42da-8e9f-84da18b90024
+
+
+https://github.com/user-attachments/assets/dca88900-df5f-411f-87b6-5e01eae7585a
 
 
 
