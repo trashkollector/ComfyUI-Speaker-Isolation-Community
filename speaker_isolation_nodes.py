@@ -96,7 +96,15 @@ class IterateThruSpeakers:
 
             # Get requested block
             seg_start, seg_end, seg_speaker = merged[index - 1]
-            duration = seg_end - seg_start
+            duration = seg_end - seg_start 
+
+            # Adjust to include pause
+            if not (index+1 < 1 or index+1 > total_segments) :
+                seg_start2, seg_end2, seg_speaker2 = merged[index]
+                if ( seg_start2 - seg_start-0.1 > duration) :
+                    duration = seg_start2 - seg_start - 0.1
+
+
             print(f"[SpeakerSegmentInfoNode] Returning block {index}: {seg_speaker} | start={seg_start:.2f}s | duration={duration:.2f}s")
 
             return (total_segments, float(seg_start), float(duration))
