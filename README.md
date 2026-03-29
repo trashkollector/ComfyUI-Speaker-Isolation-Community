@@ -69,9 +69,13 @@ If fewer than four speakers are detected, the remaining speaker audio outputs wi
 2.  **Install Dependencies:**
     Navigate into the cloned directory `ComfyUI/custom_nodes/ComfyUI-Speaker-Isolation-Community/` and install the required Python packages:
     ```bash
-    pip install -r requirements.txt
 
-    requirements file is using --no-deps to avoid issues because this lib has many dependencies.
+   
+    ***** PLEASE NOTE : I'VE COMMENTED THE requirements libs in requirements.txt ...
+    ***** see the requirements.txt file for more info on installing the libs.
+    ***** Ultimatletly you need to intall this lib.. this is basically the engine..  pip install "pyannote-audio>=4.0.4" -
+    ***** Because this has a lot of dependencies, you will need to manager this yourself.
+    ***** You may want to try using --no-deps initally.
     
     ```
     This will install `pyannote.audio` and its dependencies.
