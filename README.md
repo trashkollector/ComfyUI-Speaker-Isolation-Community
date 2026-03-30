@@ -42,7 +42,7 @@ then we added video to all the audio segments.
 
 
 
-https://github.com/user-attachments/assets/dca88900-df5f-411f-87b6-5e01eae7585a
+https://github.com/user-attachments/assets/68247262-c915-4d6a-9a2b-bc860b34ba88
 
 
 
