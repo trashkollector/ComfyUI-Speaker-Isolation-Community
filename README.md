@@ -32,8 +32,7 @@ You will need a Hugging face token for this to work
     -   `duration` (float): duration of audio segment
 
 
-<img width="1356" height="720" alt="iteratespeakers" src="https://github.com/user-attachments/assets/8cee0e98-7bfa-44c2-8008-89a09187d55f" />
-
+<img width="1368" height="895" alt="fred" src="https://github.com/user-attachments/assets/587e74f2-3a07-44a0-85ee-7aedc7d0f9eb" />
 
 Workflow coming soon ...  
 What did we do?
