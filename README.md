@@ -6,7 +6,11 @@ This can be used in for loop in comfy, to process each segment.
 
 The version uses the Community version of 
 https://huggingface.co/pyannote/speaker-diarization-community-1
-You must accept all terms, there are multiple terms you need accept not jsut one
+
+Housekeeping: You have to get a Hugging face token, you have to accept all terms and conditions so can use the models.
+
+You must accept all terms, there are multiple terms you need accept for each model.  
+Go to the website and accept all the terms they have, if you only accept 1 model it will not work.
 You will need a Hugging face token for this to work
 
 
@@ -14,7 +18,17 @@ You will need a Hugging face token for this to work
 
 -   Takes a single audio input and finds all the speakers.
 -   Uses `pyannote.audio` for speaker diarization.
--   Iterate thru the speakers
+-
+-   FORKED ENHANCEMENTS
+-   --------------------
+-   New node to Iterate thru the speakers in the audio
+-   The purpose is to be able to loop thru an audio file and extract all the speakers at the start and end time
+-   These audio clips can be used for whatever purposes you need
+-   In my workflow example. I am looping thru the audio then generating video from the audio segment
+-   then combining all the video and audio segments together to create one long video.
+
+-   I had to make some updates to the existing diarization code to use the new 4.x lib
+-   Thank you Claude for the suggestions to refactor parts of the code.
 
 
 ## Node: IterateThruSpeakers
@@ -34,8 +48,8 @@ You will need a Hugging face token for this to work
 <img width="1368" height="895" alt="fred" src="https://github.com/user-attachments/assets/587e74f2-3a07-44a0-85ee-7aedc7d0f9eb" />
 
 Workflow coming soon ...  
-What did we do?
-We took audio from an old sitcom, used this node to chop up the audio into segments.
+
+We took audio from an old sitcom and used this node to chop up the audio into segments.
 then we added video to all the audio segments.
 
 
