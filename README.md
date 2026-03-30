@@ -67,10 +67,10 @@ If fewer than four speakers are detected, the remaining speaker audio outputs wi
     git clone https://github.com/trashkollector/ComfyUI-Speaker-Isolation-Community
     ```
     
-    Why installing from Comfy Manager may fail.  I have disabled the libs in requirements file.
-    You will need to do this part yourself. Yes this was intentional becauase heavy dependencies could 
-    your mess up your environment with new versions, etc.  This is possibility with any custom  node
-    but this lib has many dependencies so chose to not incude 
+    Why installing from Comfy Manager may fail.  I have commented out the libs in requirements file.
+    You will need to do this part yourself. This is intentional becauase  dependencies could 
+    mess up your environment .  This is a possibility with ANY custom  node
+    but since the pyannote lib has many dependencies I chose to not include it.
     
     
 
@@ -79,13 +79,11 @@ If fewer than four speakers are detected, the remaining speaker audio outputs wi
     ```bash
 
    
-    ***** PLEASE NOTE : I'VE COMMENTED THE requirements libs in requirements.txt ...
-    ***** see the requirements.txt file for more info on installing the libs.
-    ***** Ultimatletly you need to intall this lib.. this is basically the engine.. 
-    *****        pip install "pyannote-audio>=4.0.4" -
-    ***** Because this has a lot of dependencies, you will need to manager this yourself.
-    ***** You may want to try using --no-deps initally.
-    ***** There are risks when installing libs wiht many dependencies so BE CAREFUL
+    ***** PLEASE NOTE : I'VE COMMENTED THE libs in requirements.txt ... So it won't automatically install within Comfy
+
+           pip install "pyannote-audio>=4.0.4" 
+
+    ***** There are risks when installing libs which have many dependencies so BE CAREFUL  (consider using --no-deps as a start)
     
     ```
     This will install `pyannote.audio` and its dependencies.
@@ -95,7 +93,7 @@ If fewer than four speakers are detected, the remaining speaker audio outputs wi
     -   You **must** have a Hugging Face account.
     -   You **must** accept the user conditions for the models used by `pyannote.audio`'s default diarization pipeline. As of writing, these are:
         -   `pyannote/segmentation-3.0` ([link](https://hf.co/pyannote/segmentation-3.0))
-        -   `pyannote/speaker-diarization-3.1` ([link](https://hf.co/pyannote/speaker-diarization-3.1))
+        -   `pyannote/speaker-diarization-3.1` ([link](https://hf.co/pyannote/speaker-diarization-community-1))
         -   The underlying speaker embedding model, often `speechbrain/speaker-recognition-ecapa-tdnn` ([link](https://hf.co/speechbrain/speaker-recognition-ecapa-tdnn)) or similar.
         Visit these Hugging Face model pages and accept their terms.
     -   Provide your Hugging Face access token (with read permissions) to the `hf_token` input of the node. This token is primarily used for the *initial download* of the models.
