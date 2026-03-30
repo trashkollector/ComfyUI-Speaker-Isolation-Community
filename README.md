@@ -42,8 +42,7 @@ then we added video to all the audio segments.
 
 
 
-https://github.com/user-attachments/assets/68247262-c915-4d6a-9a2b-bc860b34ba88
-
+https://github.com/user-attachments/assets/37be5839-4bc3-4022-94ee-f2ade767becb
 
 
 ## Node: Speaker Diarizer (Isolation)
