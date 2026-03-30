@@ -25,12 +25,11 @@ You will need a Hugging face token for this to work
     -   `hf_token` (STRING): Your Hugging Face access token. This is **required** to download and use `pyannote.audio` pretrained models. 
     -   `index` (INT): index (1 based, select a speaker)
     You can get a token from [hf.co/settings/tokens](https://hf.co/settings/tokens).
-    -   `device` (COMBO): The device to run the diarization model on (`auto`, `cuda`, `cpu`).
 -   **Outputs:**
     -   `total_segments` (int): total number of speaker segments
     -   `start_time` (float): start time of audio segment
     -   `duration` (float): duration of audio segment
-
+    -   `speaker` (string): speaker name such as SPEAKER_00
 
 <img width="1368" height="895" alt="fred" src="https://github.com/user-attachments/assets/587e74f2-3a07-44a0-85ee-7aedc7d0f9eb" />
 
